@@ -1,10 +1,6 @@
-import os
-import sys
-import time
 import requests
-import json
 from datetime import datetime, date
-from typing import Optional, List, Any
+from typing import Any
 from scripts.utilities import *
 
 def self_update(root_loc: str, this_version: str) -> None:

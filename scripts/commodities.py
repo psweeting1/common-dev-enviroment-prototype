@@ -1,7 +1,7 @@
 import os
 import yaml
 from scripts.utilities import colorize_yellow, colorize_pink, colorize_lightblue
-from scripts.provision_script.provision_postgres import provision_postgres
+from provision_scripts.provision_postgres import provision_postgres
 # from scripts.provision_hosts import provision_hosts
 # from scripts.provision_nginx import provision_nginx
 # from scripts.provision_elasticsearch5 import provision_elasticsearch5

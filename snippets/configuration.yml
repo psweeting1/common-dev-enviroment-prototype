@@ -1,0 +1,17 @@
+applications:
+  my-frontend:
+    repo: https://github.com/my/frontend.git
+    ref: develop
+
+  my-backend:
+    repo: git@github.com:my/backend.git
+    ref: master
+    variant: slim
+    options:
+      - compose-service-name: my-backend-compose-service
+        auto-start: false
+
+  my-new-app:
+    repo: none
+
+post-up-message: Optional further instructions go here. You can delete this whole line if you want!

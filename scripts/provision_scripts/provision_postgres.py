@@ -1,18 +1,26 @@
 import os
 import time
 import yaml
-from scripts.utilities import (
-    colorize_red, colorize_yellow, colorize_pink, colorize_lightblue, colorize_green,
-    run_command, run_command_noshell
-)
-from scripts.provision_commodities import (
-    commodity_required, container_to_commodity, commodity_provisioned, set_commodity_provision_status
+
+from scripts.commodities import (
+    commodity_required,
+    container_to_commodity,
+    commodity_provisioned,
+    set_commodity_provision_status,
 )
 
+from scripts.utilities import (
+    colorize_red,
+    colorize_yellow,
+    colorize_pink,
+    colorize_lightblue,
+    colorize_green,
+    run_command,
+    run_command_noshell,
+)
+
+
 def postgres_container(postgres_version: str) -> str:
-    """
-    Returns the container name for a given Postgres version.
-    """
     if postgres_version == '13':
         return 'postgres-13'
     elif postgres_version == '17':
@@ -21,10 +29,8 @@ def postgres_container(postgres_version: str) -> str:
         print(colorize_red(f"Unknown PostgreSQL version ({postgres_version}) specified."))
         return ''
 
+
 def provision_postgres(root_loc: str, new_containers: list, postgres_version: str) -> None:
-    """
-    Provisions Postgres for all apps that require it, running init SQL if needed.
-    """
     container = postgres_container(postgres_version)
     if not container:
         return
@@ -52,22 +58,22 @@ def provision_postgres(root_loc: str, new_containers: list, postgres_version: st
                 root_loc, appname, started, new_db_container, postgres_version
             )
 
+
 def postgres_required(root_loc: str, appname: str, container: str) -> bool:
-    """
-    Returns True if the app requires the given Postgres container.
-    """
     config_path = os.path.join(root_loc, 'apps', appname, 'configuration.yml')
     return (
             os.path.exists(config_path) and
             commodity_required(root_loc, appname, container_to_commodity(container))
     )
 
+
 def start_postgres_maybe(
-        root_loc: str, appname: str, started: bool, new_db_container: bool, postgres_version: str
+        root_loc: str,
+        appname: str,
+        started: bool,
+        new_db_container: bool,
+        postgres_version: str,
 ) -> bool:
-    """
-    Starts Postgres if needed and runs initialisation SQL for the app.
-    """
     container = postgres_container(postgres_version)
     if not container:
         return started
@@ -81,12 +87,13 @@ def start_postgres_maybe(
         started = start_postgres(root_loc, appname, started, postgres_version)
     return started
 
+
 def start_postgres(
-        root_loc: str, appname: str, started: bool, postgres_version: str
+        root_loc: str,
+        appname: str,
+        started: bool,
+        postgres_version: str,
 ) -> bool:
-    """
-    Starts the Postgres container and waits for it to become healthy.
-    """
     container = postgres_container(postgres_version)
     if not container:
         return started
@@ -113,10 +120,8 @@ def start_postgres(
     set_commodity_provision_status(root_loc, appname, container_to_commodity(container), True)
     return started
 
+
 def run_initialisation(root_loc: str, appname: str, container: str) -> None:
-    """
-    Copies and executes the app's Postgres init SQL fragment inside the container.
-    """
     sql_fragment = 'postgres-init-fragment.sql'
     app_fragments = os.path.join(root_loc, 'apps', appname, 'fragments')
     run_command(
@@ -126,8 +131,6 @@ def run_initialisation(root_loc: str, appname: str, container: str) -> None:
     run_command_noshell(['docker', 'exec', container, 'psql', '-q', '-f', sql_fragment])
     print(colorize_pink('...done.'))
 
+
 def check_healthy_output(command_output: list) -> bool:
-    """
-    Checks if the docker health check output indicates a healthy container.
-    """
     return any('healthy' in line for line in command_output)

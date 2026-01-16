@@ -1,13 +1,4 @@
-# logic.py
-
-import os
-import sys
-import time
 import argparse
-import subprocess
-import yaml
-from pathlib import Path
-from typing import List, Optional, Dict, Any
 
 # Import helpers scripts
 from scripts.delete_env_files import delete_files
@@ -256,7 +247,7 @@ if args.start_apps:
             time.sleep(5)
         def healthy(service: Dict[str, Any]) -> bool:
             """
-            Checks if a service is healthy using either Docker healthcheck or a custom command.
+            Checks if a service is healthy using either Docker health check or a custom command.
             """
             service['check_count'] = service.get('check_count', 0) + 1
             if service.get('healthcheck_cmd') == 'docker':

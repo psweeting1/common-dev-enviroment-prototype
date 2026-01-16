@@ -1,10 +1,9 @@
 import os
-import sys
 import time
 import threading
 import queue
 import yaml
-from typing import Dict, Any, List, Optional
+from typing import Dict, Any, List
 from scripts.utilities import (
     colorize_lightblue,
     colorize_red,

@@ -9,7 +9,7 @@ from scripts.utilities import colorize_yellow, colorize_red, colorize_lightblue
 def prepare_compose(root_loc: str, file_list_loc: str) -> None:
     """
     Prepares the list of Docker Compose fragments for the environment and writes them to a file.
-    Handles app fragments and commodity fragments, and writes the list using the correct separator for the OS.
+    Handles app fragments and commodity fragments and writes the list using the correct separator for the OS.
     """
     commodity_list: List[str] = []
     compose_variants = find_active_variants(root_loc)
